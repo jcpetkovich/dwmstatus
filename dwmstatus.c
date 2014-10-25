@@ -107,7 +107,39 @@ get_time(char *fmt, char *tzname)
 		exit(1);
 	}
 
-	return smprintf("%s", buf);
+	return smprintf("%s %s", CLOCK_GLYPH, buf);
+}
+
+char *
+get_signal_strength()
+{
+	static int bufsize = 255;
+	char buf[bufsize];
+	char *glyph;
+	char *datastart;
+	FILE *devfd;
+	int strength = 0;
+
+	if ((devfd = fopen("/proc/net/wireless", "r")) == NULL) {
+		perror("parse_wireless");
+	}
+
+	// Ignore the first two lines of the file
+	fgets(buf, bufsize, devfd);
+	fgets(buf, bufsize, devfd);
+	fgets(buf, bufsize, devfd);
+	if ((datastart = strstr(buf, "wlp1s0:")) != NULL) {
+		datastart = strstr(buf, ":");
+		sscanf(datastart + 1, " %*d   %d  %*d  %*d        %*d      %*d      %*d      %*d      %*d        %*d",
+		       &strength);
+		glyph = "<span foreground=\""BLUE"\">"WIFI_GLYPH"</span>";
+	} else {
+		glyph = "<span foreground=\""BLACK"\">"WIFI_GLYPH"</span>";
+	}
+
+	fclose(devfd);
+
+	return smprintf("%s %d", glyph, strength);
 }
 
 void
