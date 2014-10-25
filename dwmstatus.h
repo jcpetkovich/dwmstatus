@@ -22,22 +22,20 @@
 #define POWERLINE_HARD_RIGHT ""
 #define POWERLINE_SOFT_RIGHT ""
 
-
 #define BATT_NOW "/sys/class/power_supply/BAT0/energy_now"
 #define BATT_FULL "/sys/class/power_supply/BAT0/energy_full"
 #define BATT_STATUS "/sys/class/power_supply/BAT0/status"
 
+#define BEER_GLYPH ""
+#define COFFEE_GLYPH ""
+#define CPU_GLYPH ""
 #define EMAIL_GLYPH ""
 #define LINUX_GLYPH ""
 #define MUSIC_GLYPH ""
-#define COFFEE_GLYPH ""
-#define BEER_GLYPH ""
-#define CPU_GLYPH ""
+#define WIFI_GLYPH ""
 
 #define CLOCK_GLYPH "<span font=\"Icons\"></span>"
 /* #define CLOCK_GLYPH "⌚" */
-
-#define WIFI_GLYPH ""
 
 #define BAT_CHARGING_GLYPH ""
 #define BAT_FULL_GLYPH ""
