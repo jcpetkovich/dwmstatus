@@ -148,47 +148,46 @@ setstatus(char *str)
 	XStoreName(dpy, DefaultRootWindow(dpy), str);
 	XSync(dpy, False);
 }
-
-char *
-loadavg(void)
+ 
+void term(int signum)
 {
-	double avgs[3];
-
-	if (getloadavg(avgs, 3) < 0) {
-		perror("getloadavg");
-		exit(1);
-	}
-
-	return smprintf("%.2f %.2f %.2f", avgs[0], avgs[1], avgs[2]);
+    term_request = True;
 }
 
 int
 main(void)
 {
+	
+	struct sigaction sa;
+	memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = term;
+	if (sigaction(SIGTERM, &sa, 0) == -1) {
+		perror(0);
+		exit(1);
+	}
+
 	char *status;
-	char *avgs;
-	char *tmar;
-	char *tmutc;
-	char *tmbln;
+	char *tcan;
+	char *strength;
+	char *bat;
 
 	if (!(dpy = XOpenDisplay(NULL))) {
 		fprintf(stderr, "dwmstatus: cannot open display.\n");
 		return 1;
 	}
 
-	for (;;sleep(90)) {
-		avgs = loadavg();
-		tmar = mktimes("%H:%M", tzargentina);
-		tmutc = mktimes("%H:%M", tzutc);
-		tmbln = mktimes("KW %W %a %d %b %H:%M %Z %Y", tzberlin);
-
-		status = smprintf("L:%s A:%s U:%s %s",
-				avgs, tmar, tmutc, tmbln);
+	for (; !term_request; sleep(2)) {
+		tcan= get_time("%H:%M", tcanada);
+		strength = get_signal_strength();
+		bat = getbattery();
+		status = smprintf(" %s %s %s %s %s %s ",
+		                  POWERLINE_SOFT_RIGHT, strength, 
+		                  POWERLINE_SOFT_RIGHT, bat, 
+		                  POWERLINE_SOFT_RIGHT, tcan);
 		setstatus(status);
-		free(avgs);
-		free(tmar);
-		free(tmutc);
-		free(tmbln);
+		free(bat);
+		free(strength);
+		free(tcan);
 		free(status);
 	}
 
@@ -196,4 +195,3 @@ main(void)
 
 	return 0;
 }
-
