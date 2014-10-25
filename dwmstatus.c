@@ -1,5 +1,8 @@
-#define _BSD_SOURCE
+#define _GNU_SOURCE
+#include <errno.h>
+#include <signal.h>
 #include <unistd.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
