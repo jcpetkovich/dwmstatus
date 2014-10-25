@@ -46,6 +46,40 @@ smprintf(char *fmt, ...)
 	return ret;
 }
 
+char *
+getbattery(){
+	long lnum1, lnum2 = 0;
+	char *status = malloc(sizeof(char)*12);
+	char *s = "?";
+	FILE *fp = NULL;
+	long batpercent;
+	if ((fp = fopen(BATT_NOW, "r"))) {
+		fscanf(fp, "%ld\n", &lnum1);
+		fclose(fp);
+		fp = fopen(BATT_FULL, "r");
+		fscanf(fp, "%ld\n", &lnum2);
+		fclose(fp);
+		fp = fopen(BATT_STATUS, "r");
+		fscanf(fp, "%s\n", status);
+		fclose(fp);
+		batpercent = (lnum1/(lnum2/100));
+		if (strcmp(status,"Charging") == 0)
+			s = BAT_CHARGING_GLYPH;
+		if (strcmp(status,"Discharging") == 0) {
+			if (batpercent >= 70) {
+				s = "<span color=\""BLUE"\">"BAT_70_PERCENT_GLYPH"</span>";
+			} else if (batpercent >= 30) {
+				s = "<span color=\""MAGENTA"\">"BAT_30_PERCENT_GLYPH"</span>";
+			} else {
+				s = "<span color=\""RED"\">"BAT_EMPTY_GLYPH"</span>";
+			}
+		}
+		if (strcmp(status,"Full") == 0) s = BAT_FULL_GLYPH;
+		return smprintf("%s %ld%%", s, batpercent);
+	}
+	else return smprintf("");
+}
+
 void
 settz(char *tzname)
 {
