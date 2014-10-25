@@ -64,7 +64,7 @@ getbattery(){
 		fclose(fp);
 		batpercent = (lnum1/(lnum2/100));
 		if (strcmp(status,"Charging") == 0)
-			s = BAT_CHARGING_GLYPH;
+			s = "<span color=\""BLUE"\">"BAT_CHARGING_GLYPH"</span>";
 		if (strcmp(status,"Discharging") == 0) {
 			if (batpercent >= 70) {
 				s = "<span color=\""BLUE"\">"BAT_70_PERCENT_GLYPH"</span>";
@@ -74,7 +74,8 @@ getbattery(){
 				s = "<span color=\""RED"\">"BAT_EMPTY_GLYPH"</span>";
 			}
 		}
-		if (strcmp(status,"Full") == 0) s = BAT_FULL_GLYPH;
+		if (strcmp(status,"Full") == 0) 
+			s = "<span color=\""BLUE"\">"BAT_FULL_GLYPH"</span>";
 		return smprintf("%s %ld%%", s, batpercent);
 	}
 	else return smprintf("");
