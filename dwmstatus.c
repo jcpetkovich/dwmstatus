@@ -87,7 +87,7 @@ settz(char *tzname)
 }
 
 char *
-mktimes(char *fmt, char *tzname)
+get_time(char *fmt, char *tzname)
 {
 	char buf[129];
 	time_t tim;
