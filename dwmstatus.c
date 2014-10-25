@@ -15,9 +15,10 @@
 
 #include <X11/Xlib.h>
 
-char *tzargentina = "America/Buenos_Aires";
-char *tzutc = "UTC";
-char *tzberlin = "Europe/Berlin";
+#include "dwmstatus.h"
+
+char *tcanada = "Canada/Eastern";
+volatile sig_atomic_t term_request = False;
 
 static Display *dpy;
 
