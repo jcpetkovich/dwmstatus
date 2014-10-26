@@ -177,7 +177,7 @@ get_mpd_stat() {
 		free((char*)title);
 		free((char*)artist);
 	}
-	else retstr = smprintf(MUSIC_GLYPH);
+	else retstr = smprintf(MUSIC_GLYPH" ");
 	mpd_response_finish(conn);
 	mpd_connection_free(conn);
 	return retstr;
