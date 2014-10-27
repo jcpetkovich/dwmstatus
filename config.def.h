@@ -1,5 +1,5 @@
-#ifndef __DWMSTATUS_H
-#define __DWMSTATUS_H
+#ifndef __DWMSTATUS_CONFIG_H
+#define __DWMSTATUS_CONFIG_H
 
 char *tcanada = "Canada/Eastern";
 

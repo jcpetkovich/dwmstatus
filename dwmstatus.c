@@ -17,7 +17,7 @@
 
 #include <X11/Xlib.h>
 
-#include "dwmstatus.h"
+#include "config.h"
 
 volatile sig_atomic_t term_request = False;
 

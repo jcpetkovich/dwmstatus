@@ -17,11 +17,15 @@ options:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: config.mk dwmstatus.h
+${OBJ}: config.mk config.h
 
 ${NAME}: ${OBJ}
 	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
+
+config.h:
+	@echo creating $@ from config.def.h
+	@cp config.def.h $@
 
 clean:
 	@echo cleaning
@@ -30,7 +34,7 @@ clean:
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p ${NAME}-${VERSION}
-	@cp -R Makefile config.mk LICENSE dwmstatus.h \
+	@cp -R Makefile config.mk LICENSE config.def.h \
 		${SRC} ${NAME}-${VERSION}
 	@tar -cf ${NAME}-${VERSION}.tar ${NAME}-${VERSION}
 	@gzip ${NAME}-${VERSION}.tar
