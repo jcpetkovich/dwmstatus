@@ -50,7 +50,7 @@ smprintf(char *fmt, ...)
 char *
 getbattery(){
 	long lnum1, lnum2 = 0;
-	char *status = malloc(sizeof(char)*12);
+	char status[12];
 	char *s = "?";
 	FILE *fp = NULL;
 	long batpercent;
