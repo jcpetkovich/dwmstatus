@@ -50,10 +50,10 @@ smprintf(char *fmt, ...)
 char *
 get_battery(){
 	long lnum1, lnum2 = 0;
+	long batpercent;
 	char status[12];
 	char *s = "?";
 	FILE *fp = NULL;
-	long batpercent;
 	if ((fp = fopen(BATT_NOW, "r"))) {
 		fscanf(fp, "%ld\n", &lnum1);
 		fclose(fp);
@@ -117,7 +117,7 @@ get_time(char *fmt, char *tzname)
 char *
 get_signal_strength()
 {
-	static int bufsize = 255;
+	static const int bufsize = 255;
 	char buf[bufsize];
 	char *glyph;
 	char *datastart;
@@ -197,7 +197,8 @@ setstatus(char *str)
 	XSync(dpy, False);
 }
 
-void term(int signum)
+void 
+term(int signum)
 {
 	term_request = True;
 }
