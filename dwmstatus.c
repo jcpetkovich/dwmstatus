@@ -13,12 +13,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <mpd/client.h>
+#include <glib.h>
 
 #include <X11/Xlib.h>
 
 #include "dwmstatus.h"
 
-char *tcanada = "Canada/Eastern";
 volatile sig_atomic_t term_request = False;
 
 static Display *dpy;
@@ -48,7 +48,7 @@ smprintf(char *fmt, ...)
 }
 
 char *
-getbattery(){
+get_battery(){
 	long lnum1, lnum2 = 0;
 	char status[12];
 	char *s = "?";
@@ -165,17 +165,23 @@ get_mpd_stat() {
 
 	struct mpd_status* the_status = mpd_recv_status(conn);
 	if ((the_status) && (mpd_status_get_state(the_status) == MPD_STATE_PLAY)) {
+		char * quoted_title;
+		char * quoted_artist;
 		mpd_response_next(conn);
 		song = mpd_recv_song(conn);
 		title = smprintf("%s",mpd_song_get_tag(song, MPD_TAG_TITLE, 0));
 		artist = smprintf("%s",mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
+		quoted_title = g_markup_escape_text(title, strlen(title));
+		quoted_artist = g_markup_escape_text(artist, strlen(title));
 
 		mpd_song_free(song);
 		retstr = smprintf("%s %s - %s",
 		                  "<span color=\""MAGENTA"\">"MUSIC_GLYPH"</span>",
-		                  artist, title);
+		                  quoted_artist, quoted_title);
 		free((char*)title);
 		free((char*)artist);
+		g_free(quoted_title);
+		g_free(quoted_artist);
 	}
 	else retstr = smprintf(MUSIC_GLYPH" ");
 	mpd_status_free(the_status);
@@ -222,7 +228,7 @@ main(void)
 	for (; !term_request; sleep(3)) {
 		tcan= get_time("%H:%M", tcanada);
 		strength = get_signal_strength();
-		bat = getbattery();
+		bat = get_battery();
 		mpdstring = get_mpd_stat();
 		status = smprintf(" %s %s %s %s %s %s %s %s ",
 		                  POWERLINE_SOFT_RIGHT, mpdstring,
