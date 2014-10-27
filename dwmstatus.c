@@ -149,8 +149,6 @@ get_signal_strength()
 char *
 get_mpd_stat() {
 	struct mpd_song * song = NULL;
-	const char * title = NULL;
-	const char * artist = NULL;
 	char * retstr = NULL;
 	struct mpd_connection * conn;
 	if (!(conn = mpd_connection_new("localhost", 0, 30000)) ||
@@ -165,14 +163,16 @@ get_mpd_stat() {
 
 	struct mpd_status* the_status = mpd_recv_status(conn);
 	if ((the_status) && (mpd_status_get_state(the_status) == MPD_STATE_PLAY)) {
-		char * quoted_title;
-		char * quoted_artist;
+		const char * title = NULL;
+		const char * artist = NULL;
+		const gchar * quoted_title = NULL;
+		const gchar * quoted_artist = NULL;
 		mpd_response_next(conn);
 		song = mpd_recv_song(conn);
 		title = smprintf("%s",mpd_song_get_tag(song, MPD_TAG_TITLE, 0));
 		artist = smprintf("%s",mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
 		quoted_title = g_markup_escape_text(title, strlen(title));
-		quoted_artist = g_markup_escape_text(artist, strlen(title));
+		quoted_artist = g_markup_escape_text(artist, strlen(artist));
 
 		mpd_song_free(song);
 		retstr = smprintf("%s %s - %s",
@@ -180,8 +180,8 @@ get_mpd_stat() {
 		                  quoted_artist, quoted_title);
 		free((char*)title);
 		free((char*)artist);
-		g_free(quoted_title);
-		g_free(quoted_artist);
+		g_free((gchar*)quoted_title);
+		g_free((gchar*)quoted_artist);
 	}
 	else retstr = smprintf(MUSIC_GLYPH" ");
 	mpd_status_free(the_status);
