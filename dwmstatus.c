@@ -152,7 +152,7 @@ get_mpd_stat() {
 	const char * title = NULL;
 	const char * artist = NULL;
 	char * retstr = NULL;
-	struct mpd_connection * conn ;
+	struct mpd_connection * conn;
 	if (!(conn = mpd_connection_new("localhost", 0, 30000)) ||
 	    mpd_connection_get_error(conn)){
 		return smprintf("");
@@ -178,6 +178,7 @@ get_mpd_stat() {
 		free((char*)artist);
 	}
 	else retstr = smprintf(MUSIC_GLYPH" ");
+	mpd_status_free(theStatus);
 	mpd_response_finish(conn);
 	mpd_connection_free(conn);
 	return retstr;
