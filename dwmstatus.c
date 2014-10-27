@@ -163,8 +163,8 @@ get_mpd_stat() {
 	mpd_send_current_song(conn);
 	mpd_command_list_end(conn);
 
-	struct mpd_status* theStatus = mpd_recv_status(conn);
-	if ((theStatus) && (mpd_status_get_state(theStatus) == MPD_STATE_PLAY)) {
+	struct mpd_status* the_status = mpd_recv_status(conn);
+	if ((the_status) && (mpd_status_get_state(the_status) == MPD_STATE_PLAY)) {
 		mpd_response_next(conn);
 		song = mpd_recv_song(conn);
 		title = smprintf("%s",mpd_song_get_tag(song, MPD_TAG_TITLE, 0));
@@ -178,7 +178,7 @@ get_mpd_stat() {
 		free((char*)artist);
 	}
 	else retstr = smprintf(MUSIC_GLYPH" ");
-	mpd_status_free(theStatus);
+	mpd_status_free(the_status);
 	mpd_response_finish(conn);
 	mpd_connection_free(conn);
 	return retstr;
