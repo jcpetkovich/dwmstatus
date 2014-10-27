@@ -1,6 +1,8 @@
 #ifndef __DWMSTATUS_H
 #define __DWMSTATUS_H
 
+char *tcanada = "Canada/Eastern";
+
 #define BLACK	"#3a3a3a"
 #define RED	"#ef2929"
 #define GREEN	"#5faf00"
