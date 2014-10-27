@@ -1,7 +1,7 @@
 #ifndef __DWMSTATUS_CONFIG_H
 #define __DWMSTATUS_CONFIG_H
 
-char *tcanada = "Canada/Eastern";
+static char *tcanada = "Canada/Eastern";
 
 #define BLACK	"#3a3a3a"
 #define RED	"#ef2929"
