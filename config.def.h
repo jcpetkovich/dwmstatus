@@ -35,6 +35,7 @@ static char *tcanada = "Canada/Eastern";
 #define LINUX_GLYPH	""
 #define MUSIC_GLYPH	""
 #define WIFI_GLYPH	""
+#define ETHER_GLYPH     ""
 
 #define CLOCK_GLYPH "<span font=\"Icons\"></span>"
 /* #define CLOCK_GLYPH "⌚" */
