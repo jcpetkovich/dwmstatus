@@ -65,16 +65,21 @@ get_battery(){
 		fclose(fp);
 		batpercent = (lnum1/(lnum2/100));
 		if (strcmp(status,"Charging") == 0)
-			s = "<span color=\""YELLOW"\">"BAT_CHARGING_GLYPH"</span>";
+			s = "<span color=\""YELLOW"\">"
+				BAT_CHARGING_GLYPH"</span>";
 		if (strcmp(status,"Discharging") == 0) {
 			if (batpercent >= 75) {
-				s = "<span color=\""BLUE"\">"BAT_FULL_GLYPH"</span>";
+				s = "<span color=\""BLUE"\">"
+					BAT_FULL_GLYPH"</span>";
 			} else if (batpercent >= 50) {
-				s = "<span color=\""BLUE"\">"BAT_70_PERCENT_GLYPH"</span>";
+				s = "<span color=\""BLUE"\">"
+					BAT_70_PERCENT_GLYPH"</span>";
 			} else if (batpercent >= 15) {
-				s = "<span color=\""MAGENTA"\">"BAT_30_PERCENT_GLYPH"</span>";
+				s = "<span color=\""MAGENTA"\">"
+					BAT_30_PERCENT_GLYPH"</span>";
 			} else {
-				s = "<span color=\""RED"\">"BAT_EMPTY_GLYPH"</span>";
+				s = "<span color=\""RED"\">"
+					BAT_EMPTY_GLYPH"</span>";
 			}
 		}
 		if (strcmp(status,"Full") == 0)
@@ -115,7 +120,7 @@ get_time(char *fmt, char *tzname)
 }
 
 char *
-get_signal_strength()
+get_net_status()
 {
 	static const int bufsize = 255;
 	char buf[bufsize];
@@ -123,27 +128,49 @@ get_signal_strength()
 	char *datastart;
 	FILE *devfd;
 	int strength = 0;
+	char *status = NULL;
 
-	if ((devfd = fopen("/proc/net/wireless", "r")) == NULL) {
-		perror("parse_wireless");
-	}
+	if ((devfd = fopen("/sys/class/net/eno1/operstate", "r")) != NULL) {
 
-	// Ignore the first two lines of the file
-	fgets(buf, bufsize, devfd);
-	fgets(buf, bufsize, devfd);
-	fgets(buf, bufsize, devfd);
-	if ((datastart = strstr(buf, "wlp1s0:")) != NULL) {
-		datastart = strstr(buf, ":");
-		sscanf(datastart + 1, " %*d   %d  %*d  %*d        %*d      %*d      %*d      %*d      %*d        %*d",
-		       &strength);
-		glyph = "<span foreground=\""BLUE"\">"WIFI_GLYPH"</span>";
+		fgets(buf, bufsize, devfd);
+		if (strcmp(buf, "up") == 0) {
+			glyph = "<span foreground=\""BLUE"\">"
+				ETHER_GLYPH"</span>";
+			status = "up";
+		} else {
+			glyph = "<span foreground=\""BLACK"\">"
+				ETHER_GLYPH"</span>";
+			status = "dn";
+		}
+
+		fclose(devfd);
+
+		return smprintf("%s %s", glyph, status);
+
+	} else if ((devfd = fopen("/proc/net/wireless", "r")) != NULL) {
+		// Ignore the first two lines of the file
+		fgets(buf, bufsize, devfd);
+		fgets(buf, bufsize, devfd);
+		fgets(buf, bufsize, devfd);
+		if ((datastart = strstr(buf, "wlp1s0:")) != NULL) {
+			datastart = strstr(buf, ":");
+			sscanf(datastart + 1, " %*d   %d  %*d  %*d        %*d      %*d      %*d      %*d      %*d        %*d",
+			       &strength);
+			glyph = "<span foreground=\""BLUE"\">"
+				WIFI_GLYPH"</span>";
+		} else {
+			glyph = "<span foreground=\""BLACK"\">"
+				WIFI_GLYPH"</span>";
+		}
+
+		fclose(devfd);
+
+		return smprintf("%s %d", glyph, strength);
+
 	} else {
-		glyph = "<span foreground=\""BLACK"\">"WIFI_GLYPH"</span>";
+		perror("net status error");
+		return NULL;
 	}
-
-	fclose(devfd);
-
-	return smprintf("%s %d", glyph, strength);
 }
 
 char *
@@ -162,21 +189,25 @@ get_mpd_stat() {
 	mpd_command_list_end(conn);
 
 	struct mpd_status* the_status = mpd_recv_status(conn);
-	if ((the_status) && (mpd_status_get_state(the_status) == MPD_STATE_PLAY)) {
+	if ((the_status)
+	    && (mpd_status_get_state(the_status) == MPD_STATE_PLAY)) {
 		const char * title = NULL;
 		const char * artist = NULL;
 		const gchar * quoted_title = NULL;
 		const gchar * quoted_artist = NULL;
 		mpd_response_next(conn);
 		song = mpd_recv_song(conn);
-		title = smprintf("%s",mpd_song_get_tag(song, MPD_TAG_TITLE, 0));
-		artist = smprintf("%s",mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
+		title = smprintf("%s",
+		                 mpd_song_get_tag(song, MPD_TAG_TITLE, 0));
+		artist = smprintf("%s",
+		                  mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
 		quoted_title = g_markup_escape_text(title, strlen(title));
 		quoted_artist = g_markup_escape_text(artist, strlen(artist));
 
 		mpd_song_free(song);
 		retstr = smprintf("%s %s - %s",
-		                  "<span color=\""MAGENTA"\">"MUSIC_GLYPH"</span>",
+		                  "<span color=\""MAGENTA"\">"
+		                  MUSIC_GLYPH"</span>",
 		                  quoted_artist, quoted_title);
 		free((char*)title);
 		free((char*)artist);
@@ -197,7 +228,7 @@ setstatus(char *str)
 	XSync(dpy, False);
 }
 
-void 
+void
 term(int signum)
 {
 	term_request = True;
@@ -228,7 +259,7 @@ main(void)
 
 	for (; !term_request; sleep(3)) {
 		tcan= get_time("%H:%M", tcanada);
-		strength = get_signal_strength();
+		strength = get_net_status();
 		bat = get_battery();
 		mpdstring = get_mpd_stat();
 		status = smprintf(" %s %s %s %s %s %s %s %s ",
