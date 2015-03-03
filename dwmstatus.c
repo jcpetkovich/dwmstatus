@@ -86,7 +86,7 @@ get_battery(){
 			s = "<span color=\""BLUE"\">"BAT_FULL_GLYPH"</span>";
 		return smprintf("%s %ld%%", s, batpercent);
 	}
-	else return smprintf("");
+	else return smprintf("<span color=\""BLUE"\">"AC_POWER_GLYPH"</span> ");
 }
 
 void
