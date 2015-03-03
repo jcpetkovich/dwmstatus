@@ -45,5 +45,6 @@ static char *tcanada = "Canada/Eastern";
 #define BAT_70_PERCENT_GLYPH	""
 #define BAT_30_PERCENT_GLYPH	""
 #define BAT_EMPTY_GLYPH		""
+#define AC_POWER_GLYPH          ""
 
 #endif

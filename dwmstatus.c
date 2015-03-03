@@ -128,24 +128,21 @@ get_net_status()
 	char *datastart;
 	FILE *devfd;
 	int strength = 0;
-	char *status = NULL;
 
-	if ((devfd = fopen("/sys/class/net/eno1/operstate", "r")) != NULL) {
+	if ((devfd = fopen("/sys/class/net/enp4s0/operstate", "r")) != NULL) {
 
 		fgets(buf, bufsize, devfd);
-		if (strcmp(buf, "up") == 0) {
+		if (strcmp(buf, "up\n") == 0) {
 			glyph = "<span foreground=\""BLUE"\">"
 				ETHER_GLYPH"</span>";
-			status = "up";
 		} else {
 			glyph = "<span foreground=\""BLACK"\">"
 				ETHER_GLYPH"</span>";
-			status = "dn";
 		}
 
 		fclose(devfd);
 
-		return smprintf("%s %s", glyph, status);
+		return smprintf("%s ", glyph);
 
 	} else if ((devfd = fopen("/proc/net/wireless", "r")) != NULL) {
 		// Ignore the first two lines of the file
