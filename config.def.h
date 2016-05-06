@@ -28,6 +28,8 @@ static char *tcanada = "Canada/Eastern";
 #define BATT_FULL "/sys/class/power_supply/BAT0/energy_full"
 #define BATT_STATUS "/sys/class/power_supply/BAT0/status"
 
+#define WIFI_DEV "wlp1s0"
+
 #define BEER_GLYPH	""
 #define COFFEE_GLYPH	""
 #define CPU_GLYPH	""

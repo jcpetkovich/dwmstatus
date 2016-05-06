@@ -149,7 +149,7 @@ get_net_status()
 		fgets(buf, bufsize, devfd);
 		fgets(buf, bufsize, devfd);
 		fgets(buf, bufsize, devfd);
-		if ((datastart = strstr(buf, "wlp1s0:")) != NULL) {
+		if ((datastart = strstr(buf, WIFI_DEV":")) != NULL) {
 			datastart = strstr(buf, ":");
 			sscanf(datastart + 1, " %*d   %d  %*d  %*d        %*d      %*d      %*d      %*d      %*d        %*d",
 			       &strength);
