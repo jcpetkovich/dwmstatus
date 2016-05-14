@@ -42,11 +42,11 @@ static char *tcanada = "Canada/Eastern";
 #define CLOCK_GLYPH "<span font=\"Icons\"></span>"
 /* #define CLOCK_GLYPH "⌚" */
 
-#define BAT_CHARGING_GLYPH	""
-#define BAT_FULL_GLYPH		""
-#define BAT_70_PERCENT_GLYPH	""
-#define BAT_30_PERCENT_GLYPH	""
-#define BAT_EMPTY_GLYPH		""
-#define AC_POWER_GLYPH          ""
+#define BAT_CHARGING_GLYPH   "<span font=\"Icons\"></span>"
+#define BAT_FULL_GLYPH       "<span font=\"Icons\"></span>"
+#define BAT_70_PERCENT_GLYPH "<span font=\"Icons\"></span>"
+#define BAT_30_PERCENT_GLYPH "<span font=\"Icons\"></span>"
+#define BAT_EMPTY_GLYPH      "<span font=\"Icons\"></span>"
+#define AC_POWER_GLYPH       "<span font=\"Icons\"></span>"
 
 #endif
